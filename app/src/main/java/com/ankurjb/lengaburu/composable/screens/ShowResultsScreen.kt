@@ -2,27 +2,26 @@ package com.ankurjb.lengaburu.composable.screens
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankurjb.lengaburu.composable.BaseScaffold
 import com.ankurjb.lengaburu.composable.onClick
+import com.ankurjb.lengaburu.viewmodels.ResultViewModel
 
 @Composable
 fun ShowResultsScreen(
+    viewModel: ResultViewModel = hiltViewModel(),
     onBackPress: onClick
 ) {
-    var isSubmitEnabled by remember {
-        mutableStateOf(true)
-    }
+    val result by viewModel.uiState.collectAsState()
     BaseScaffold(
         appBarText = "Results",
         submitButtonText = "Proceed",
-        isSubmitEnabled = isSubmitEnabled,
+        isSubmitEnabled = false,
         showSubmitButton = false,
         onSubmitClick = { }
     ) {
-        Text(text = "Results")
+        Text(text = result)
     }
 }
