@@ -12,7 +12,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-interface VehiclesRepository {
+interface MainRepository {
     suspend fun getVehicles(): UiState<List<VehicleResponse>>
 
     suspend fun getPlanets(): UiState<List<PlanetResponse>>
@@ -28,11 +28,11 @@ interface VehiclesRepository {
     ): UiState<String>
 }
 
-class VehiclesRepositoryImpl @Inject constructor(
+class MainRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val mapper: ApiDataMapper,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : VehiclesRepository {
+) : MainRepository {
 
     override suspend fun getInitialData() = withContext(ioDispatcher) {
         val vehiclesResult = async { apiService.getAllVehicles() }

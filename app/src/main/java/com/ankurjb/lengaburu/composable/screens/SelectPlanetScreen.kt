@@ -32,16 +32,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ankurjb.lengaburu.composable.AutoCompleteText
 import com.ankurjb.lengaburu.composable.BaseScaffold
-import com.ankurjb.lengaburu.composable.onClick
 import com.ankurjb.lengaburu.model.PlanetResponse
 import com.ankurjb.lengaburu.model.VehicleResponse
-import com.ankurjb.lengaburu.viewmodels.PlanetViewModel
+import com.ankurjb.lengaburu.viewmodels.MainViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SelectPlanetsScreen(
-    viewModel: PlanetViewModel = hiltViewModel(),
-    onBackPress: onClick,
+    viewModel: MainViewModel = hiltViewModel(),
     context: Context = LocalContext.current,
     onSubmit: (Triple<Double, List<String>, List<String>>) -> Unit,
 ) {

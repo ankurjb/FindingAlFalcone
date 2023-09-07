@@ -7,7 +7,7 @@ import com.ankurjb.lengaburu.mapper.ViewDataMapper
 import com.ankurjb.lengaburu.model.HomeScreenUiState
 import com.ankurjb.lengaburu.model.PlanetResponse
 import com.ankurjb.lengaburu.model.VehicleResponse
-import com.ankurjb.lengaburu.repo.VehiclesRepository
+import com.ankurjb.lengaburu.repo.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PlanetViewModel @Inject constructor(
-    private val repository: VehiclesRepository,
+class MainViewModel @Inject constructor(
+    private val repository: MainRepository,
     private val mapper: ViewDataMapper
 ) : ViewModel() {
 

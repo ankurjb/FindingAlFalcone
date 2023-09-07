@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ankurjb.lengaburu.api.UiState
 import com.ankurjb.lengaburu.model.ResultUiState
-import com.ankurjb.lengaburu.repo.VehiclesRepository
+import com.ankurjb.lengaburu.repo.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ResultViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val repository: VehiclesRepository
+    private val repository: MainRepository
 ) : ViewModel() {
     private val selectedPlanets by lazy {
         savedStateHandle.get<Array<String>>(PLANETS)
