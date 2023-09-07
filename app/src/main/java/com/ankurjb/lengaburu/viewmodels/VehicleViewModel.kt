@@ -1,9 +1,9 @@
 package com.ankurjb.lengaburu.viewmodels
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankurjb.lengaburu.api.ApiService
+import com.ankurjb.lengaburu.api.UiState
+import com.ankurjb.lengaburu.repo.VehiclesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VehicleViewModel @Inject constructor(
-    private val apiService: ApiService
+    private val repository: VehiclesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<List<String>>(emptyList())
@@ -24,10 +24,13 @@ class VehicleViewModel @Inject constructor(
     }
 
     private fun getVehicleList() = viewModelScope.launch {
-        val response = apiService.getAllVehicles()
-        if (response.isSuccessful) {
-            _uiState.update {
-                response.body()?.map { it.name }.orEmpty()
+        when (val response = repository.getVehicles()) {
+            is UiState.Success -> _uiState.update {
+                response.data
+            }
+
+            is UiState.Error -> {
+
             }
         }
     }

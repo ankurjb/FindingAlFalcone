@@ -3,8 +3,8 @@ package com.ankurjb.lengaburu.viewmodels
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankurjb.lengaburu.api.ApiService
-import com.ankurjb.lengaburu.model.FindFalconRequestBody
+import com.ankurjb.lengaburu.api.UiState
+import com.ankurjb.lengaburu.repo.VehiclesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ResultViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val apiService: ApiService
+    private val repository: VehiclesRepository
 ) : ViewModel() {
     private val selectedPlanets by lazy {
         savedStateHandle.get<Array<String>>(PLANETS)
@@ -31,27 +31,28 @@ class ResultViewModel @Inject constructor(
     }
 
     private fun getToken() = viewModelScope.launch {
-        val response = apiService.getToken()
-        if (response.isSuccessful && response.body()?.token != null) {
-            getResults(response.body()?.token!!)
+        when (val response = repository.getToken()) {
+            is UiState.Success -> getResults(response.data)
+            is UiState.Error -> {
+
+            }
         }
     }
 
     private fun getResults(token: String) = viewModelScope.launch {
-        val response =
-            apiService.findFalcone(
-                FindFalconRequestBody(
-                    token = token,
-                    planetNames = selectedPlanets,
-                    vehicleNames = selectedVehicles
-                )
-            )
+        val response = repository.findFalcone(
+            token = token,
+            planetNames = selectedPlanets,
+            vehicleNames = selectedVehicles
+        )
 
-        _uiState.update {
-            if (response.isSuccessful && response.body()?.planetName != null) {
-                response.body()?.planetName.orEmpty()
-            } else {
-                ""
+        when (response) {
+            is UiState.Success -> _uiState.update {
+                response.data
+            }
+
+            is UiState.Error -> {
+
             }
         }
     }

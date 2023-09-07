@@ -2,7 +2,8 @@ package com.ankurjb.lengaburu.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ankurjb.lengaburu.api.ApiService
+import com.ankurjb.lengaburu.api.UiState
+import com.ankurjb.lengaburu.repo.VehiclesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlanetViewModel @Inject constructor(
-    private val apiService: ApiService
+    private val repository: VehiclesRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<List<String>>(emptyList())
@@ -23,14 +24,14 @@ class PlanetViewModel @Inject constructor(
     }
 
     private fun getPlanetList() = viewModelScope.launch {
-        val response = apiService.getAllPlanets()
-        if (response.isSuccessful) {
-            _uiState.update {
-                response.body()?.map { it.name }.orEmpty()
+        when (val response = repository.getPlanets()) {
+            is UiState.Success -> _uiState.update {
+                response.data
+            }
+
+            is UiState.Error -> {
+
             }
         }
-    }
-
-    companion object {
     }
 }
