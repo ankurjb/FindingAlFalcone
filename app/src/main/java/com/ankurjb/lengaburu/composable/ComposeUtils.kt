@@ -13,13 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -50,6 +49,7 @@ import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.Navigator
+import com.ankurjb.lengaburu.model.PlanetResponse
 
 typealias onClick = () -> Unit
 
@@ -77,6 +77,7 @@ fun BaseScaffold(
     showSubmitButton: Boolean = true,
     isSubmitEnabled: Boolean,
     onSubmitClick: onClick,
+    snackBarHost: @Composable () -> Unit = {},
     content: @Composable () -> Unit
 ) = Scaffold(
     modifier = Modifier.fillMaxSize(),
@@ -99,13 +100,15 @@ fun BaseScaffold(
             title = {
                 Text(text = appBarText)
             },
-            navigationIcon = { Icon(Icons.Filled.KeyboardArrowLeft, "") }
+            //navigationIcon = { Icon(Icons.Filled.KeyboardArrowLeft, "") }
         )
-    }
+    },
+    snackbarHost = snackBarHost
 ) { paddingValues ->
     Column(
         modifier = Modifier
             .padding(paddingValues)
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         content()
@@ -116,8 +119,8 @@ fun BaseScaffold(
 @Composable
 fun AutoCompleteText(
     header: String,
-    categories: List<String>,
-    onValueChange: (String) -> Unit
+    getPlanets: (String) -> List<PlanetResponse>,
+    onValueChange: (PlanetResponse) -> Unit
 ) {
     val uiState = rememberAutocompleteUiState()
     Column(
@@ -135,9 +138,9 @@ fun AutoCompleteText(
         Column(modifier = Modifier.fillMaxWidth()) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
-                    value = uiState.category,
+                    value = uiState.planetName,
                     onValueChange = {
-                        uiState.category = it
+                        uiState.planetName = it
                         uiState.expanded = true
                     },
                     modifier = Modifier
@@ -170,27 +173,11 @@ fun AutoCompleteText(
                     LazyColumn(
                         modifier = Modifier.heightIn(max = 150.dp),
                     ) {
-                        if (uiState.category.isNotEmpty()) {
-                            items(
-                                categories.filter {
-                                    it.lowercase().contains(uiState.category.lowercase())
-                                }.sorted()
-                            ) {
-                                CategoryItems(title = it) { title ->
-                                    uiState.category = title
-                                    uiState.expanded = false
-                                    onValueChange(uiState.category)
-                                }
-                            }
-                        } else {
-                            items(
-                                categories.sorted()
-                            ) {
-                                CategoryItems(title = it) { title ->
-                                    uiState.category = title
-                                    uiState.expanded = false
-                                    onValueChange(uiState.category)
-                                }
+                        itemsIndexed(getPlanets(uiState.planetName)) { index: Int, item: PlanetResponse ->
+                            CategoryItems(title = item.name) {
+                                uiState.planetName = item.name
+                                uiState.expanded = false
+                                onValueChange(item)
                             }
                         }
                     }
@@ -203,22 +190,18 @@ fun AutoCompleteText(
 @Composable
 fun CategoryItems(
     title: String,
-    onSelect: (String) -> Unit
+    onSelect: onClick
+) = Row(
+    modifier = Modifier
+        .fillMaxWidth()
+        .clickable(onClick = onSelect)
+        .padding(10.dp)
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onSelect(title)
-            }
-            .padding(10.dp)
-    ) {
-        Text(text = title, fontSize = 16.sp)
-    }
+    Text(text = title, fontSize = 16.sp)
 }
 
 class AutoCompleteTextUiState {
-    var category by mutableStateOf("")
+    var planetName by mutableStateOf("")
     var textFieldSize by mutableStateOf(Size.Zero)
     var expanded by mutableStateOf(false)
     val interactionSource = MutableInteractionSource()
