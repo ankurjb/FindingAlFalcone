@@ -1,6 +1,5 @@
 package com.ankurjb.lengaburu.repo
 
-import android.util.Log
 import com.ankurjb.lengaburu.ApiDataMapper
 import com.ankurjb.lengaburu.api.ApiService
 import com.ankurjb.lengaburu.api.UiState
@@ -97,12 +96,10 @@ class MainRepositoryImpl @Inject constructor(
             )
 
             response.isSuccessful -> {
-                Log.d("TAG", "getResults Auth: ${response.raw()}")
                 UiState.Error("No Data Found")
             }
 
             else -> {
-                Log.d("TAG", "getResults Auth: ${response.raw()}")
                 UiState.Error(response.message() ?: "No Data Found")
             }
         }
@@ -128,12 +125,10 @@ class MainRepositoryImpl @Inject constructor(
             )
 
             response.isSuccessful -> {
-                Log.d("TAG", "getResults Success: ${response.raw()}")
                 UiState.Error("No Data Found")
             }
 
             else -> {
-                Log.d("TAG", "getResults: ${response.raw()}")
                 UiState.Error(response.message() ?: "No Data Found")
             }
         }

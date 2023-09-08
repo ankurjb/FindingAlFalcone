@@ -1,5 +1,6 @@
 package com.ankurjb.lengaburu.viewmodels
 
+import androidx.annotation.VisibleForTesting
 import androidx.core.os.bundleOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -43,7 +44,8 @@ class ResultViewModel @Inject constructor(
         }
     }
 
-    private fun getToken() = viewModelScope.launch {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun getToken() = viewModelScope.launch {
         when (val response = repository.getToken()) {
             is UiState.Success -> getResults(response.data)
             is UiState.Error -> _errorMessage.emit(response.errorMessage)
@@ -77,9 +79,12 @@ class ResultViewModel @Inject constructor(
     fun retry() = getToken()
 
     companion object {
-        private const val PLANETS = "PLANETS"
-        private const val VEHICLES = "VEHICLES"
-        private const val TIME_TAKEN = "TIME_TAKEN"
+        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        const val PLANETS = "PLANETS"
+        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        const val VEHICLES = "VEHICLES"
+        @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+        const val TIME_TAKEN = "TIME_TAKEN"
 
         fun getBundle(
             timeTaken: Double,
