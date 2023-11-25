@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Unit Tests
         if: always()
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew jacocoTestReport
 
 #      - name: Upload AAR files
 #        if: always()

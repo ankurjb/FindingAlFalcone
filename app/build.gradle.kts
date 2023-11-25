@@ -4,6 +4,7 @@ plugins {
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
     id("kotlin-parcelize")
+    id("jacoco")
 }
 
 android {
@@ -35,6 +36,19 @@ android {
             enableUnitTestCoverage = true
         }
     }
+
+    testCoverage {
+        version = "0.8.7"
+    }
+
+    tasks.withType<Test> {
+        finalizedBy("jacocoTestReport")
+    }
+
+    tasks.register("jacocoTestReport") {
+        dependsOn("testDebugUnitTest")
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -102,4 +116,6 @@ dependencies {
 
     val nav_version = "2.6.0"
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.31")
 }
