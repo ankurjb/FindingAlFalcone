@@ -6,13 +6,15 @@ import com.ankurjb.lengaburu.api.UiState
 import com.ankurjb.lengaburu.di.IoDispatcher
 import com.ankurjb.lengaburu.model.PlanetResponse
 import com.ankurjb.lengaburu.model.VehicleResponse
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 interface MainRepository {
     suspend fun getVehicles(): UiState<List<VehicleResponse>>
+
+    suspend fun getUnitTest()
 
     suspend fun getPlanets(): UiState<List<PlanetResponse>>
 
@@ -72,6 +74,10 @@ class MainRepositoryImpl @Inject constructor(
             else -> UiState.Error(response.message() ?: "No Data Found")
         }
         return@withContext result
+    }
+
+    override suspend fun getUnitTest() = withContext(ioDispatcher) {
+
     }
 
     override suspend fun getPlanets() = withContext(ioDispatcher) {
