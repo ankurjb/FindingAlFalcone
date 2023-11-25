@@ -10,6 +10,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -25,8 +26,11 @@ class MainViewModelTest {
 
     private lateinit var viewModel: MainViewModel
 
-    @RelaxedMockK
-    private lateinit var repository: MainRepository
+    private var repository: MainRepository = mockk{
+        coEvery {
+            getInitialData()
+        } returns mockk()
+    }
 
     private val mapper: ViewDataMapper = ViewDataMapper()
 
@@ -42,11 +46,6 @@ class MainViewModelTest {
             ioDispatcher = Dispatchers.Main
         )*/
         viewModel = MainViewModel(repository = repository, mapper = mapper)
-    }
-
-    @Test
-    fun `on viewModel init`() = runTest {
-
     }
 
     @Test
