@@ -21,13 +21,37 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-#      - name: Generate AAR and APK files
-#        if: always()
-#        run: ./gradlew assembleDebug
+      #      - name: Generate AAR and APK files
+      #        if: always()
+      #        run: ./gradlew assembleDebug
 
-      - name: Run Unit Tests
-        if: always()
+      #      - name: Run Unit Tests
+      #        if: always()
+      #        run: ./gradlew jacocoTestReport
+
+      - name: Build and run tests
+        run: ./gradlew clean
+
+      - name: Generate JaCoCo reports
         run: ./gradlew jacocoTestReport
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: jacoco-reports
+          path: app/build/reports/jacoco/jacocoTestReport
+
+      - name: Download Jacoco reports
+        uses: actions/download-artifact@v2
+        with:
+          name: jacoco-reports
+          path: jacoco-reports
+
+      - name: Display JaCoCo reports
+        uses: actions/checkout@v2
+        with:
+          path: jacoco-reports
+          ref: ${{ github.event.before }}
 
 #      - name: Upload AAR files
 #        if: always()
