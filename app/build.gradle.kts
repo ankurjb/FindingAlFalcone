@@ -37,18 +37,6 @@ android {
         }
     }
 
-    testCoverage {
-        version = "0.8.7"
-    }
-
-    tasks.withType<Test> {
-        finalizedBy("jacocoTestReport")
-    }
-
-    tasks.register("jacocoTestReport") {
-        dependsOn("testDebugUnitTest")
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -67,6 +55,18 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+tasks.withType<Test> {
+    finalizedBy("jacocoTestReport")
+}
+
+tasks.register("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
 }
 
 kapt {
