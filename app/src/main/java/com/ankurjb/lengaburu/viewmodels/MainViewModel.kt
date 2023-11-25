@@ -90,6 +90,10 @@ class MainViewModel @Inject constructor(
         processVehicleList(response)
     }
 
+    fun getUnitTest() = viewModelScope.launch {
+        repository.getUnitTest()
+    }
+
     private suspend fun processVehicleList(
         response: UiState<List<VehicleResponse>>
     ) = when (response) {
