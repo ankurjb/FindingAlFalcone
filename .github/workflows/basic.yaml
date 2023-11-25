@@ -45,7 +45,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: jacoco-reports
-          path: jacoco-reports
+          path: app/build/reports/jacoco/jacocoTestReport
 
       - name: Display JaCoCo reports
         uses: actions/checkout@v2
