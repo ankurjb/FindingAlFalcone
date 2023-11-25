@@ -43,7 +43,7 @@ class MainRepositoryTest {
         mainRepository = MainRepositoryImpl(
             apiService = apiService,
             mapper = mapper,
-            ioDispatcher = Dispatchers.Main
+            ioDispatcher = Dispatchers.Unconfined
         )
     }
 
