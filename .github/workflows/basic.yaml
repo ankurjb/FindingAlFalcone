@@ -39,13 +39,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: jacoco-reports
-          path: app/build/reports/jacoco/jacocoTestReport
+          path: app/build/reports/tests/testDebugUnitTest
 
       - name: Download Jacoco reports
         uses: actions/download-artifact@v2
         with:
           name: jacoco-reports
-          path: app/build/reports/jacoco/jacocoTestReport
+          path: app/build/reports/tests/testDebugUnitTest
 
       - name: Display JaCoCo reports
         uses: actions/checkout@v2
